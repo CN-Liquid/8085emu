@@ -4,6 +4,7 @@
 int main(int argc , char* argv[])
 {
     emu8085 test;
-    std::cout<<"struct size : "<< sizeof(test)<<std::endl;
+    test.reset();
+    test.print_reg();
     return 0;
 }

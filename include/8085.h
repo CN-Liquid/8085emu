@@ -2,8 +2,8 @@
 #include<stdint.h>
 #include<iostream>
 
-typedef int8_t byte;
-typedef int16_t word;
+typedef uint8_t byte;
+typedef uint16_t word;
 
 class emu8085
 {
@@ -28,7 +28,7 @@ class emu8085
         byte* mem;
 
         //Instruction register
-        byte inst;
+        byte I;
 
         //The fetch-decode-execute-store cycle for the 8085
         void op_fetch();
@@ -45,5 +45,7 @@ class emu8085
         void reset_mem();
 
         void reset();
+
+        void print_reg();
     
 };
