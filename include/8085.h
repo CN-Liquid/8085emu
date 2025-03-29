@@ -31,6 +31,10 @@ class emu8085
         
         ~emu8085(){}
 
+        void reset_reg(){}
+
+        void reset_mem(){}
+
         void reset(){}
 
 
