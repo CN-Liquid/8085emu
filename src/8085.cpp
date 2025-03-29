@@ -10,12 +10,12 @@ emu8085::emu8085()
         std::cout << "Memory allocation failed\n"<<std::endl;
 
     }
-};
+}
 
 emu8085::~emu8085()
 {
     delete[] mem;
-};
+}
 
 void emu8085::reset_reg()
 {

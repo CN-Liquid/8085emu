@@ -31,19 +31,19 @@ class emu8085
         byte inst;
 
         //The fetch-decode-execute-store cycle for the 8085
-        void op_fetch(){}
-        byte mem_read(word memloc){}
-        void mem_write(word memloc , byte mem){}
+        void op_fetch();
+        byte mem_read(word memloc);
+        void mem_write(word memloc , byte mem);
 
     public:
-        emu8085(){}
+        emu8085();
         
-        ~emu8085(){}
+        ~emu8085();
 
-        void reset_reg(){}
+        void reset_reg();
 
-        void reset_mem(){}
+        void reset_mem();
 
-        void reset(){}
+        void reset();
     
 };
