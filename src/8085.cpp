@@ -23,6 +23,20 @@ void emu8085::reset_reg()
     A = B = C = D = E = H = L = SP = PC = S = Z = AC = P = CY = 0;
 }
 
+void emu8085::op_fetch()
+{
+    inst = mem[PC];
+}
+byte emu8085::mem_read(word memloc)
+{
+    return mem[memloc];
+}
+
+void emu8085::mem_write(word memloc , byte mem)
+{
+    this->mem[ memloc ]=mem;
+}
+
 void emu8085::reset_mem()
 {
     //resetting the whole memory
