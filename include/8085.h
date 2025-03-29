@@ -1,5 +1,6 @@
 #pragma once
 #include<stdint.h>
+#include<iostream>
 
 typedef int8_t byte;
 typedef int16_t word;
@@ -23,8 +24,12 @@ class emu8085
         byte P : 1; //parity
         byte CY : 1; //carry
 
+        byte* mem;
+
     public:
         emu8085(){}
+        
+        ~emu8085(){}
 
         void reset(){}
 
