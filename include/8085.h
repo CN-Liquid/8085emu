@@ -7,7 +7,7 @@ typedef uint16_t word;
 
 class emu8085
 {
-    private:
+    public:
         //main registers
         byte A,B,C,D,E,H,L;
 
@@ -35,7 +35,8 @@ class emu8085
         byte mem_read(word memloc);
         void mem_write(word memloc , byte mem);
 
-    public:
+
+
         emu8085();
         
         ~emu8085();
@@ -47,5 +48,33 @@ class emu8085
         void reset();
 
         void print_reg();
-    
+
+        void execute();
+
+        //Data transfet instructions
+        void MOV_R_R(byte &reg1,byte &reg2);
+        void MOV_R_M(byte &reg , word memLoc);
+        void MOV_M_R(word memLoc , byte &reg);
+
+        void MVI_R_D(byte &reg , byte data);
+        void MVI_M_D(word memLoc , byte data);
+
+        void LXI_RP_D(byte &regPair,word data);
+
+        void LDA_M(word memloc);
+
+        void LDAX_RP(byte &regPair);
+
+        void LHLD_D(word memloc);
+
+        void STA_M(word memloc);
+
+        void STAX_RP(byte &regpair);
+
+        void SHLD_M(word memloc);
+
+        void XCHG();
+
+
+
 };

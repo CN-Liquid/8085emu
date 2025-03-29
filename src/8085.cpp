@@ -61,6 +61,11 @@ void emu8085::reset()
             reset_mem();
         }
 
+void emu8085::execute()
+{
+    
+}
+
 void emu8085::print_reg()
 {
     std::cout << "A : " << std::hex << static_cast<int>(A) << std::dec << std::endl;
