@@ -51,27 +51,27 @@ class emu8085
 
         void execute();
 
-        //Data transfet instructions
+        //Data transfet instsructions
         void MOV_R_R(byte &reg1,byte &reg2);
-        void MOV_R_M(byte &reg , word memLoc);
-        void MOV_M_R(word memLoc , byte &reg);
+        void MOV_R_M(byte &reg );
+        void MOV_M_R( byte &reg);
 
         void MVI_R_D(byte &reg , byte data);
-        void MVI_M_D(word memLoc , byte data);
+        void MVI_M_D(byte data);
 
         void LXI_RP_D(byte &regPair,word data);
 
-        void LDA_M(word memloc);
+        void LDA_M(word memLoc);
 
         void LDAX_RP(byte &regPair);
 
-        void LHLD_D(word memloc);
+        void LHLD_D(word memLoc);
 
-        void STA_M(word memloc);
+        void STA_M(word memLoc);
 
         void STAX_RP(byte &regpair);
 
-        void SHLD_M(word memloc);
+        void SHLD_M(word memLoc);
 
         void XCHG();
 

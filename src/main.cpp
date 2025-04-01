@@ -9,8 +9,7 @@ int main(int argc , char* argv[])
     emu8085 test;
     std::string arg;
     test.reset();
-    test.MVI_R_D(test.A,80);
-    test.MOV_R_R(test.B,test.A);
+    test.LXI_RP_D(test.H , 2000);
     test.print_reg();
     /*
     while(!exit)
