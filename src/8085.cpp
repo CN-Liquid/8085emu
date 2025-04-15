@@ -1,17 +1,23 @@
 #include <8085.h>
 
-emu8085::emu8085() {
+emu8085::emu8085()
+    : regArray({&B, &C, &D, &E, &H, &L, &A, &A}),
+      regPairArray({&B, &D, &H, &SPU})
+{
   mem = new byte[65536]();
 
   // error handling for if the mem allocation fails
-  if (!mem) {
-    std::cout << "Memory allocation failed\n" << std::endl;
+  if (!mem)
+  {
+    std::cout << "Memory allocation failed\n"
+              << std::endl;
   }
 }
 
 emu8085::~emu8085() { delete[] mem; }
 
-void emu8085::reset_reg() {
+void emu8085::reset_reg()
+{
   // Initialize all registers to zero essentially resetting the cpu context
   A = B = C = D = E = H = L = 0x00;
   SPU = 0xFF;
@@ -22,36 +28,65 @@ void emu8085::reset_reg() {
   I = 0x00; // Initialize instruction register
 }
 
-void emu8085::op_fetch() { I = mem[PCU << 4 | PCL]; }
-void emu8085::mem_read(word memLoc) {
-  if (memLoc >= 65536) {
+void emu8085::op_fetch()
+{
+  mem_read(get_PC());
+  I = DB;
+}
+void emu8085::mem_read(word memLoc)
+{
+  if (memLoc >= 65536)
+  {
+    std::cerr << "Invalid memory read at: " << memLoc << std::endl;
+    return; // Or throw an exception
+  }
+  DB = mem[memLoc];
+  INX_RP(PCU);
+}
+void emu8085::mem_access(word memLoc)
+{
+  if (memLoc >= 65536)
+  {
     std::cerr << "Invalid memory read at: " << memLoc << std::endl;
     return; // Or throw an exception
   }
   DB = mem[memLoc];
 }
 
-void emu8085::mem_write(word memloc) {
-  if (memloc >= 65536) {
+void emu8085::mem_write(word memloc)
+{
+  if (memloc >= 65536)
+  {
     std::cerr << "Invalid memory read at: " << memloc << std::endl;
     return;
   }
   this->mem[memloc] = DB;
 }
 
-void emu8085::reset_mem() {
+void emu8085::reset_mem()
+{
   // resetting the whole memory
   std::fill(mem, mem + 65536, 0);
 }
 
-void emu8085::reset() {
+void emu8085::reset()
+{
   reset_reg();
   reset_mem();
 }
 
-void emu8085::execute() {}
+void emu8085::execute()
+{
+  running = true;
+  while (running == true)
+  {
+    op_fetch();
+    function_recognizer(I);
+  }
+}
 
-void emu8085::print_reg() {
+void emu8085::print_reg()
+{
   std::cout << "A : " << std::hex << static_cast<int>(A) << std::dec
             << std::endl;
   std::cout << "B : " << std::hex << static_cast<int>(B)
@@ -69,9 +104,20 @@ void emu8085::print_reg() {
             << " CY : " << static_cast<int>(CY) << std::endl;
 }
 
-void emu8085::set_PC(word memLoc) {
+void emu8085::set_PC(word memLoc)
+{
   byte upperByte = byte(memLoc >> 8);
   byte lowerByte = byte(memLoc);
   PCU = upperByte;
   PCL = lowerByte;
+}
+
+word emu8085::get_PC()
+{
+  word upperByte = PCU << 8;
+  word lowerByte = PCL;
+
+  word PC = upperByte + lowerByte;
+
+  return PC;
 }
