@@ -1,2 +1,2 @@
-## 8085 EMU
-# A simple 8085 emulator
+# 8085 EMU
+## A simple 8085 emulator
