@@ -5,8 +5,7 @@
 typedef uint8_t byte;
 typedef uint16_t word;
 
-class emu8085
-{
+class emu8085 {
 public:
   // main registers
   byte A, B, C, D, E, H, L;
@@ -36,9 +35,13 @@ public:
 
   // The fetch-decode-execute-store cycle for the 8085
   void op_fetch();
+
+  // Transfer commands
+  void load_reg_pair(byte &regPair, word data);
+  void load_reg(byte &reg, byte data);
   void mem_read(word memloc);
-  void mem_access(word memLoc);
   void mem_write(word memloc);
+
   byte populate_arguments_byte();
   word populate_arguments_word();
 
@@ -72,79 +75,79 @@ public:
   void MOV_R_M(byte &reg);
   void MOV_M_R(byte &reg);
 
-  void MVI_R_D(byte &reg, byte data = 0);
-  void MVI_M_D(byte data = 0);
+  void MVI_R_D(byte &reg);
+  void MVI_M_D();
 
-  void LXI_RP_D(byte &regPair, word data = 0);
+  void LXI_RP_D(byte &regPair);
 
-  void LDA_M(word memLoc = 0);
+  void LDA_M();
 
   void LDAX_RP(byte &regPair);
 
-  void LHLD_D(word memLoc = 0);
+  void LHLD_D();
 
-  void STA_M(word memLoc = 0);
+  void STA_M();
 
   void STAX_RP(byte &regpair);
 
-  void SHLD_M(word memLoc = 0);
+  void SHLD_M();
 
   void XCHG();
 
   // Arithmetic Instructions
   void ADD_R(byte &reg);
-  void ADD_M(word memLoc = 0);
+  void ADD_M();
 
   void ADC_R(byte &reg);
-  void ADC_M(word memLoc = 0);
+  void ADC_M();
 
-  void ADI_D(byte data = 0);
+  void ADI_D();
 
-  void ACI_D(byte data = 0);
+  void ACI_D();
 
   void DAD_RP(byte &regPair);
 
   void SUB_R(byte &reg);
-  void SUB_M(word memLoc = 0);
+  void SUB_M();
 
   void SBB_R(byte &reg);
-  void SBB_M(word memLoc = 0);
+  void SBB_M();
 
-  void SUI_D(byte data = 0);
+  void SUI_D();
 
-  void SBI_D(byte data = 0);
+  void SBI_D();
 
   void INR_R(byte &reg);
-  void INR_M(word memLoc = 0);
+  void INR_M();
 
   void INX_RP(byte &bytePair);
 
   void DCR_R(byte &reg);
-  void DCR_M(word memLoc = 0);
+  void DCR_M();
 
   void DCX_RP(byte &bytePair);
 
   // Logical instructions
 
   void CMP_R(byte &reg);
-  void CMP_M(word memLoc = 0);
+  void CMP_M();
 
-  void CPI_D(byte data = 0);
+  void CPI_D();
 
   void ANA_R(byte &reg);
-  void ANA_M(word memLoc = 0);
+  void ANA_M();
 
-  void ANI_D(byte data = 0);
+  void ANI_D();
 
   void XRA_R(byte &reg);
-  void XRA_M(word memLoc = 0);
+  void XRA_M();
 
-  void XRI_D(byte data = 0);
+  void XRI_D();
 
   void ORA_R(byte &reg);
-  void ORA_M(word memLoc = 0);
+  void ORA_M();
 
-  void ORI_D(byte data = 0);
+  void ORI_D();
 
   void RLC();
 
@@ -161,27 +164,27 @@ public:
   void STC();
 
   // Branching instructions
-  void JMP_M(word memLoc = 0);
+  void JMP_M();
 
-  void JC_M(word memLoc = 0);
-  void JNC_M(word memLoc = 0);
-  void JP_M(word memLoc = 0);
-  void JM_M(word memLoc = 0);
-  void JZ_M(word memLoc = 0);
-  void JNZ_M(word memLoc = 0);
-  void JPE_M(word memLoc = 0);
-  void JPO_M(word memLoc = 0);
+  void JC_M();
+  void JNC_M();
+  void JP_M();
+  void JM_M();
+  void JZ_M();
+  void JNZ_M();
+  void JPE_M();
+  void JPO_M();
 
-  void CALL_M(word memLoc = 0);
+  void CALL_M();
 
-  void CC_M(word memLoc = 0);
-  void CNC_M(word memLoc = 0);
-  void CP_M(word memLoc = 0);
-  void CM_M(word memLoc = 0);
-  void CZ_M(word memLoc = 0);
-  void CNZ_M(word memLoc = 0);
-  void CPE_M(word memLoc = 0);
-  void CPO_M(word memLoc = 0);
+  void CC_M();
+  void CNC_M();
+  void CP_M();
+  void CM_M();
+  void CZ_M();
+  void CNZ_M();
+  void CPE_M();
+  void CPO_M();
 
   void RET();
 
@@ -206,7 +209,7 @@ public:
   // Stack operations
 
   void PUSH_RP(byte &regpair);
-  void PUSH_M(word memLoc = 0);
+  void PUSH_M();
   void POP_RP(byte &regPair);
-  void POP_M(word memLoc = 0);
+  void POP_M();
 };
