@@ -25,10 +25,12 @@ void emu8085::reset_reg() {
 }
 
 void emu8085::op_fetch() {
-  print_reg();
+  
   mem_read(get_PC());
-  INX_RP(PCU);
   I = DB;
+  print_reg();
+  //std::getchar();
+  INX_RP(PCU);
 }
 void emu8085::mem_read(word memLoc) {
   if (memLoc >= 65536) {
@@ -102,7 +104,7 @@ word emu8085::get_PC() {
 }
 
 void emu8085::load_reg_pair(byte &regPair, word data) {
-  regPair = data >> 8;
-  *(&regPair + sizeof(regPair)) = data;
+  regPair = byte(data >> 8);
+  *(&regPair + sizeof(regPair)) = byte(data);
 }
 void emu8085::load_reg(byte &reg, byte data) { reg = data; }

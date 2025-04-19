@@ -18,7 +18,7 @@ word emu8085::populate_arguments_word() {
   word data = DB;
   mem_read(get_PC());
   INX_RP(PCU);
-  data = (data << 8) + DB;
+  data = (data ) + word(DB<<8);
   return data;
 }
 void emu8085::MOV_R_R(byte &reg1, byte &reg2) { reg1 = reg2; }
@@ -94,9 +94,9 @@ void emu8085::ADD_R(byte &reg) {
   A = A + reg;
 
   // Flag checking
-  (A == 0) ?: Z = 0;
-  (A & 0b10000000 != 0) ? S = 1 : 0;
-  (hasEvenOnes(A) == 1) ?: P = 1;
+  (A == 0) ? Z=1: Z = 0;
+  ((A & 0b10000000) != 0) ? S = 1 : S = 0;
+  (hasEvenOnes(A) == 1) ? P = 1 : P = 0;
   CY = (A < reg);
   AC = (A & 0x0F + reg & 0x0F) & 0b00010000 != 0;
 }
@@ -106,9 +106,9 @@ void emu8085::ADD_M() {
   A = A + DB;
 
   // Flag checking
-  (A == 0) ?: Z = 0;
-  (A & 0b10000000 != 0) ? S = 1 : 0;
-  (hasEvenOnes(A) == 1) ?: P = 1;
+  (A == 0) ?Z=1:Z=0;
+  ((A & 0b10000000 )!= 0) ? S = 1 : S = 0;
+  (hasEvenOnes(A) == 1) ? P = 1 : P = 0;
   CY = (A < mem[memLoc]);
   AC = (A & 0x0F + mem[memLoc] & 0x0F) & 0b00010000 != 0;
 }
@@ -117,9 +117,9 @@ void emu8085::ADC_R(byte &reg) {
   A = A + reg + CY;
 
   // Flag checking
-  (A == 0) ?: Z = 0;
-  (A & 0b10000000 != 0) ? S = 1 : 0;
-  (hasEvenOnes(A) == 1) ?: P = 1;
+  (A == 0) ?Z=1:Z=0;
+  ((A & 0b10000000 )!= 0) ? S = 1 : S = 0;
+  (hasEvenOnes(A) == 1) ? P = 1 : P = 0;
   CY = (A < reg);
   AC = (A & 0x0F + reg & 0x0F) & 0b00010000 != 0;
 }
@@ -129,9 +129,9 @@ void emu8085::ADC_M() {
   A = A + DB + CY;
 
   // Flag checking
-  (A == 0) ?: Z = 0;
-  (A & 0b10000000 != 0) ? S = 1 : 0;
-  (hasEvenOnes(A) == 1) ?: P = 1;
+  (A == 0) ?Z=1:Z=0;
+  ((A & 0b10000000 )!= 0) ? S = 1 : S = 0;
+  (hasEvenOnes(A) == 1) ? P = 1 : P = 0;
   CY = (A < mem[memLoc]);
   AC = (A & 0x0F + mem[memLoc] & 0x0F) & 0b00010000 != 0;
 }
@@ -141,9 +141,9 @@ void emu8085::ADI_D() {
   A = A + data;
 
   // Flag checking
-  (A == 0) ?: Z = 0;
-  (A & 0b10000000 != 0) ? S = 1 : 0;
-  (hasEvenOnes(A) == 1) ?: P = 1;
+  (A == 0) ?Z=1:Z=0;
+  ((A & 0b10000000 )!= 0) ? S = 1 : S = 0;
+  (hasEvenOnes(A) == 1) ? P = 1 : P = 0;
   CY = (A < data);
   AC = (A & 0x0F + data & 0x0F) & 0b00010000 != 0;
 }
@@ -152,9 +152,9 @@ void emu8085::ACI_D() {
   A = A + data + CY;
 
   // Flag checking
-  (A == 0) ?: Z = 0;
-  (A & 0b10000000 != 0) ? S = 1 : 0;
-  (hasEvenOnes(A) == 1) ?: P = 1;
+  (A == 0) ?Z=1:Z=0;
+  ((A & 0b10000000 )!= 0) ? S = 1 : S = 0;
+  (hasEvenOnes(A) == 1) ? P = 1 : P = 0;
   CY = (A < data);
   AC = (A & 0x0F + data & 0x0F) & 0b00010000 != 0;
 }
@@ -170,82 +170,83 @@ void emu8085::DAD_RP(byte &regPair) {
 }
 void emu8085::SUB_R(byte &reg) {
   CY = (A < reg);
-  AC = (A & 0x0f < (reg & 0x0f));
+  AC = ((A & 0x0f) < (reg & 0x0f));
   A = A - reg;
 
   // Flag checking
   (A == 0) ? Z = 1 : 0;
-  (A & 0b10000000 != 0) ? S = 1 : 0;
-  (hasEvenOnes(A) == 1) ?: P = 1;
+  ((A & 0b10000000 )!= 0) ? S = 1 : S = 0;
+  (hasEvenOnes(A) == 1) ? P = 1 : P = 0;
 }
 void emu8085::SUB_M() {
   word memLoc = populate_arguments_word();
   mem_read(memLoc);
+  CY = (A < mem[memLoc]);
+  AC = ((A & 0x0f) < (mem[memLoc] & 0x0f));
   A = A - DB;
 
   // Flag checking
-  (A == 0) ?: Z = 0;
-  (A & 0b10000000 != 0) ? S = 1 : 0;
-  (hasEvenOnes(A) == 1) ?: P = 1;
-  CY = ((A + mem[memLoc]) < mem[memLoc]);
-  AC = ((A + mem[memLoc]) & 0x0f < (mem[memLoc] & 0x0f));
+  (A == 0) ?Z=1:Z=0;
+  ((A & 0b10000000 )!= 0) ? S = 1 : S = 0;
+  (hasEvenOnes(A) == 1) ? P = 1 : P = 0;
 }
 void emu8085::SBB_R(byte &reg) {
+  CY = ((A) < reg + CY);
+  AC = ((A&0x0f) < (reg + CY & 0x0f));
   A = A - reg - CY;
 
   // Flag checking
-  (A == 0) ?: Z = 0;
-  (A & 0b10000000 != 0) ? S = 1 : 0;
-  (hasEvenOnes(A) == 1) ?: P = 1;
-  CY = ((A + reg + CY) < reg + CY);
-  AC = ((A + reg + CY) & 0x0f < (reg + CY & 0x0f));
+  (A == 0) ?Z=1:Z=0;
+  ((A & 0b10000000 )!= 0) ? S = 1 : S = 0;
+  (hasEvenOnes(A) == 1) ? P = 1 : P = 0;
 }
 void emu8085::SBB_M() {
   word memLoc = populate_arguments_word();
   mem_read(memLoc);
+  CY = ((A) < mem[memLoc] + CY);
+  AC = ((A&0x0f) < (mem[memLoc] + CY & 0x0f));
   A = A - DB - CY;
 
   // Flag checking
-  (A == 0) ?: Z = 0;
-  (A & 0b10000000 != 0) ? S = 1 : 0;
-  (hasEvenOnes(A) == 1) ?: P = 1;
-  CY = ((A + mem[memLoc] + CY) < mem[memLoc] + CY);
-  AC = ((A + mem[memLoc] + CY) & 0x0f < (mem[memLoc] + CY & 0x0f));
+  (A == 0) ?Z=1:Z=0;
+  ((A & 0b10000000 )!= 0) ? S = 1 : S = 0;
+  (hasEvenOnes(A) == 1) ? P = 1 : P = 0;
 }
 void emu8085::SUI_D() {
   byte data = populate_arguments_byte();
+  CY = ((A) < data);
+  AC = ((A&0x0f) < (data & 0x0f));
   A = A - data;
 
   // Flag checking
-  (A == 0) ?: Z = 0;
-  (A & 0b10000000 != 0) ? S = 1 : 0;
-  (hasEvenOnes(A) == 1) ?: P = 1;
-  CY = ((A + data) < data);
-  AC = ((A + data) & 0x0f < (data & 0x0f));
+  (A == 0) ?Z=1:Z=0;
+  ((A & 0b10000000 )!= 0) ? S = 1 : S = 0;
+  (hasEvenOnes(A) == 1) ? P = 1 : P = 0;
 }
 void emu8085::SBI_D() {
   byte data = populate_arguments_byte();
+  CY = ((A) < data + CY);
+  AC = ((A&0x0f) < (data + CY & 0x0f));
   A = A - data - CY;
 
   // Flag checking
-  (A == 0) ?: Z = 0;
-  (A & 0b10000000 != 0) ? S = 1 : 0;
-  (hasEvenOnes(A) == 1) ?: P = 1;
-  CY = ((A + data + CY) < data + CY);
-  AC = ((A + data + CY) & 0x0f < (data + CY & 0x0f));
+  (A == 0) ?Z=1:Z=0;
+  ((A & 0b10000000 )!= 0) ? S = 1 : S = 0;
+  (hasEvenOnes(A) == 1) ? P = 1 : P = 0;
 }
 void emu8085::INR_R(byte &reg) {
+  AC = (((reg & 0x0F )+ 0b1) & 0b00010000) != 0;
   reg = reg + 1;
 
   // Flag checking
-  (reg == 0) ?: Z = 0;
-  (reg & 0b10000000 != 0) ? S = 1 : 0;
-  (hasEvenOnes(reg) == 1) ?: P = 1;
-  AC = (1 + reg & 0x0F) & 0b00010000 != 0;
+  (reg == 0) ?Z = 1: Z = 0;
+  (reg & 0b10000000 != 0) ? S = 1 : S = 0;
+  (hasEvenOnes(reg) == 1) ?P = 1: P = 0;
 }
 void emu8085::INR_M() {
   word memLoc = populate_arguments_word();
   mem_read(memLoc);
+  AC = (mem[memLoc] & 0x0F) & 0b00010000 != 0;
   DB = DB + 1;
   mem_write(memLoc);
 
@@ -253,7 +254,6 @@ void emu8085::INR_M() {
   (mem[memLoc] == 0) ?: Z = 0;
   (mem[memLoc] & 0b10000000 != 0) ? S = 1 : 0;
   (hasEvenOnes(mem[memLoc]) == 1) ?: P = 1;
-  AC = (1 + mem[memLoc] & 0x0F) & 0b00010000 != 0;
 }
 void emu8085::INX_RP(byte &regPair) {
   word upperByte = regPair << 8;
@@ -264,16 +264,17 @@ void emu8085::INX_RP(byte &regPair) {
   *(&regPair + sizeof(regPair)) = (byte)sum;
 }
 void emu8085::DCR_R(byte &reg) {
+  AC = ((reg & 0x0F) == 0);
   reg = reg - 1;
 
   // Flag checking
-  (reg == 0) ?: Z = 0;
-  (reg & 0b10000000 != 0) ? S = 1 : 0;
-  (hasEvenOnes(reg) == 1) ?: P = 1;
-  AC = ((reg + 1) & 0x0f < 0b1);
+  (reg == 0) ?Z=1: Z = 0;
+  ((reg & 0b10000000) != 0) ? S = 1 :S= 0;
+  (hasEvenOnes(reg) == 1) ?P=1: P = 0;
 }
 void emu8085::DCR_M() {
   word memLoc = populate_arguments_word();
+  AC = ((mem[memLoc]) & 0x0f < 0b1);
   mem_read(memLoc);
   DB = DB - 1;
   mem_write(memLoc);
@@ -282,7 +283,6 @@ void emu8085::DCR_M() {
   (mem[memLoc] == 0) ?: Z = 0;
   (mem[memLoc] & 0b10000000 != 0) ? S = 1 : 0;
   (hasEvenOnes(mem[memLoc]) == 1) ?: P = 1;
-  AC = ((mem[memLoc] + 1) & 0x0f < 0b1);
 }
 void emu8085::DCX_RP(byte &regPair) {
   word otherPair = ((word)regPair) << 8 | (word) * (&regPair + sizeof(regPair));
