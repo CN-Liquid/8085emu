@@ -25,11 +25,11 @@ void emu8085::reset_reg() {
 }
 
 void emu8085::op_fetch() {
-  
+
   mem_read(get_PC());
   I = DB;
   print_reg();
-  //std::getchar();
+  // std::getchar();
   INX_RP(PCU);
 }
 void emu8085::mem_read(word memLoc) {
@@ -108,3 +108,13 @@ void emu8085::load_reg_pair(byte &regPair, word data) {
   *(&regPair + sizeof(regPair)) = byte(data);
 }
 void emu8085::load_reg(byte &reg, byte data) { reg = data; }
+
+void emu8085::print(word memLoc) {
+
+  for (int i = 0; i < 8; i++) {
+    mem_read(memLoc + i);
+    std::cout << std::hex << static_cast<int>(DB) << " ";
+  }
+}
+
+void emu8085::load_DB(byte data) { DB = data; }

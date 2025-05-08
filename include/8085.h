@@ -6,7 +6,7 @@ typedef uint8_t byte;
 typedef uint16_t word;
 
 class emu8085 {
-public:
+
   // main registers
   byte A, B, C, D, E, H, L;
 
@@ -33,6 +33,7 @@ public:
 
   bool running = false;
 
+public:
   // The fetch-decode-execute-store cycle for the 8085
   void op_fetch();
 
@@ -41,6 +42,7 @@ public:
   void load_reg(byte &reg, byte data);
   void mem_read(word memloc);
   void mem_write(word memloc);
+  void load_DB(byte data);
 
   byte populate_arguments_byte();
   word populate_arguments_word();
@@ -49,6 +51,8 @@ public:
 
   std::array<byte *, 8> regArray;
   std::array<byte *, 4> regPairArray;
+
+  void print(word memLoc);
 
   emu8085()
 
