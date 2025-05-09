@@ -10,9 +10,6 @@ emu8085::emu8085()
     std::cout << "Memory allocation failed\n" << std::endl;
   }
 }
-
-emu8085::~emu8085() { delete[] mem; }
-
 void emu8085::reset_reg() {
   // Initialize all registers to zero essentially resetting the cpu context
   A = B = C = D = E = H = L = 0x00;
@@ -23,13 +20,20 @@ void emu8085::reset_reg() {
   S = Z = AC = P = CY = 0;
   I = 0x00; // Initialize instruction register
 }
+void emu8085::reset_mem() {
+  // resetting the whole memory
+  std::fill(mem, mem + 65536, 0);
+}
+void emu8085::reset() {
+  reset_reg();
+  reset_mem();
+}
 
 void emu8085::op_fetch() {
 
   mem_read(get_PC());
-  I = DB;
-  print_reg();
-  // std::getchar();
+
+  load_reg(I, DB);
   INX_RP(PCU);
 }
 void emu8085::mem_read(word memLoc) {
@@ -40,22 +44,12 @@ void emu8085::mem_read(word memLoc) {
   DB = mem[memLoc];
 }
 
-void emu8085::mem_write(word memloc) {
-  if (memloc >= 65536) {
-    std::cerr << "Invalid memory read at: " << memloc << std::endl;
+void emu8085::mem_write(word memLoc) {
+  if (memLoc >= 65536) {
+    std::cerr << "Invalid memory read at: " << memLoc << std::endl;
     return;
   }
-  this->mem[memloc] = DB;
-}
-
-void emu8085::reset_mem() {
-  // resetting the whole memory
-  std::fill(mem, mem + 65536, 0);
-}
-
-void emu8085::reset() {
-  reset_reg();
-  reset_mem();
+  mem[memLoc] = DB;
 }
 
 void emu8085::execute() {
@@ -103,12 +97,6 @@ word emu8085::get_PC() {
   return PC;
 }
 
-void emu8085::load_reg_pair(byte &regPair, word data) {
-  regPair = byte(data >> 8);
-  *(&regPair + sizeof(regPair)) = byte(data);
-}
-void emu8085::load_reg(byte &reg, byte data) { reg = data; }
-
 void emu8085::print(word memLoc) {
 
   for (int i = 0; i < 8; i++) {
@@ -117,4 +105,4 @@ void emu8085::print(word memLoc) {
   }
 }
 
-void emu8085::load_DB(byte data) { DB = data; }
+emu8085::~emu8085() { delete[] mem; }

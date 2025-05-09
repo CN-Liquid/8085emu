@@ -18,7 +18,7 @@ int main(int argc, char *argv[]) {
   }
   test.print(0x2010);
 
-  // test.execute();
+  test.execute();
 
   // test.print_reg();
   // std::cout << int(test.mem[2100]);

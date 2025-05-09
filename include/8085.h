@@ -7,6 +7,8 @@ typedef uint16_t word;
 
 class emu8085 {
 
+  // word size registers are divided into upper and lower bytes
+
   // main registers
   byte A, B, C, D, E, H, L;
 
@@ -29,52 +31,65 @@ class emu8085 {
   // Instruction register
   byte I;
 
+  // the 8-bit data bus
   byte DB;
 
+  // on/off state of the machine
   bool running = false;
 
-public:
   // The fetch-decode-execute-store cycle for the 8085
   void op_fetch();
 
-  // Transfer commands
+  // The functions that fetches next bytes from the memory depending on the
+  // instruction byte for a two byte instruction and word for a three byte
+  // instruction
+  byte populate_arguments_byte();
+  word populate_arguments_word();
+
+  // This function takes an opcode and executes it
+  void function_recognizer(byte opcode);
+
+  // These array are used by function_executor to efficiently
+  // determine the operand by their array index
+  std::array<byte *, 8> regArray;
+  std::array<byte *, 4> regPairArray;
+
+public:
+  // Transfer commands only to be used to define 8085 instructions
   void load_reg_pair(byte &regPair, word data);
   void load_reg(byte &reg, byte data);
   void mem_read(word memloc);
   void mem_write(word memloc);
   void load_DB(byte data);
-
-  byte populate_arguments_byte();
-  word populate_arguments_word();
-
-  void function_recognizer(byte opcode);
-
-  std::array<byte *, 8> regArray;
-  std::array<byte *, 4> regPairArray;
-
+  void execute();
   void print(word memLoc);
 
-  emu8085()
-
-      ;
+  emu8085();
 
   ~emu8085();
 
+  // resets all registers and flags to their default
   void reset_reg();
 
+  // resets all memory to 0x00;
   void reset_mem();
 
+  // resets both the cpu context and the memory
   void reset();
 
+  // prints the current context of the cpu
   void print_reg();
 
-  void execute();
-
+  // Sets and returns the current stack pointer
   void set_PC(word memLoc);
-
   word get_PC();
 
-  // Data transfet instsructions
+  // 8085 instructions
+  // The instructions defined here are abstracted , R represents register , M
+  // represents data at that memory , D represents immediate memory and RP
+  // represents register pair . Eg :- R_M represents from register to memory
+
+  // Data transfer instsructions
   void MOV_R_R(byte &reg1, byte &reg2);
   void MOV_R_M(byte &reg);
   void MOV_M_R(byte &reg);
