@@ -1,8 +1,6 @@
 #include <8085.h>
 
-emu8085::emu8085()
-    : regArray({&B, &C, &D, &E, &H, &L, &A, &A}),
-      regPairArray({&B, &D, &H, &SPU}) {
+emu8085::emu8085() {
   mem = new byte[65536]();
 
   // error handling for if the mem allocation fails
@@ -27,6 +25,7 @@ void emu8085::reset_mem() {
 void emu8085::reset() {
   reset_reg();
   reset_mem();
+  initializeInstructionTable();
 }
 
 void emu8085::op_fetch() {
@@ -58,7 +57,7 @@ void emu8085::execute() {
 
     op_fetch();
 
-    function_recognizer(I);
+    function_recognizer(I)();
   }
 }
 

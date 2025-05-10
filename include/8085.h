@@ -1,7 +1,9 @@
 #pragma once
 #include <array>
+#include <functional>
 #include <iostream>
 #include <stdint.h>
+#include <unordered_map>
 typedef uint8_t byte;
 typedef uint16_t word;
 
@@ -25,7 +27,7 @@ class emu8085 {
   byte P : 1;  // parity
   byte CY : 1; // carry
 
-  // The 16KB memory for the CPU
+  // The 64KB memory for the CPU
   byte *mem;
 
   // Instruction register
@@ -47,12 +49,9 @@ class emu8085 {
   word populate_arguments_word();
 
   // This function takes an opcode and executes it
-  void function_recognizer(byte opcode);
+  std::function<void()> function_recognizer(byte opcode);
 
-  // These array are used by function_executor to efficiently
-  // determine the operand by their array index
-  std::array<byte *, 8> regArray;
-  std::array<byte *, 4> regPairArray;
+  void initializeInstructionTable();
 
 public:
   // Transfer commands only to be used to define 8085 instructions
