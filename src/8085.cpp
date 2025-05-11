@@ -35,21 +35,6 @@ void emu8085::op_fetch() {
   load_reg(I, DB);
   INX_RP(PCU);
 }
-void emu8085::mem_read(word memLoc) {
-  if (memLoc >= 65536) {
-    std::cerr << "Invalid memory read at: " << memLoc << std::endl;
-    return; // Or throw an exception
-  }
-  DB = mem[memLoc];
-}
-
-void emu8085::mem_write(word memLoc) {
-  if (memLoc >= 65536) {
-    std::cerr << "Invalid memory read at: " << memLoc << std::endl;
-    return;
-  }
-  mem[memLoc] = DB;
-}
 
 void emu8085::execute() {
   running = true;

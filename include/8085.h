@@ -60,6 +60,7 @@ public:
   void mem_read(word memloc);
   void mem_write(word memloc);
   void load_DB(byte data);
+
   void execute();
   void print(word memLoc);
 
