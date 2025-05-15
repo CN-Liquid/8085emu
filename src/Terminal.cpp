@@ -9,7 +9,7 @@ terminal::terminal() {
   cEnd.function = std::bind(&terminal::fEnd, this);
 
   cLoad.minLength = 4;
-  cLoad.maxLength = 256;
+  cLoad.maxLength = 255;
   cLoad.function = std::bind(&terminal::fLoad, this);
 
   cPrint.minLength = 3;
@@ -20,18 +20,75 @@ terminal::terminal() {
   cReset.maxLength = 1;
   cReset.function = std::bind(&terminal::fReset, this);
 
+  cExec.minLength = 1;
+  cExec.maxLength = 1;
+  cExec.function = std::bind(&terminal::fExec, this);
+
+  cCounter.minLength = 3;
+  cCounter.maxLength = 3;
+  cCounter.function = std::bind(&terminal::fCounter, this);
+
+  cContext.minLength = 1;
+  cContext.maxLength = 1;
+  cContext.function = std::bind(&terminal::fContext, this);
+
   init();
 }
 
-terminal::~terminal() { delete &CPU; }
+terminal::~terminal() {}
 
 void terminal::init() {
   commandRepo["end"] = cEnd;
   commandRepo["load"] = cLoad;
   commandRepo["print"] = cPrint;
   commandRepo["reset"] = cReset;
+  commandRepo["context"] = cContext;
+  commandRepo["counter"] = cCounter;
+  commandRepo["exec"] = cExec;
 }
 
+void terminal::string_parser() {
+  std::istringstream stream(input);
+  std::string temp;
+
+  while (getline(stream, temp, delimiter)) {
+    token.push_back(temp);
+  }
+}
+
+void terminal::input_parser() {
+
+  try {
+    if (token.size() == 0) {
+      return;
+    }
+
+    else if (commandRepo.at(token.at(0)).minLength <= token.size() &&
+             (commandRepo.at(token.at(0)).maxLength >= token.size())) {
+
+      commandRepo.at(token.at(0)).function();
+    }
+
+    else {
+      std::cout << "Syntax error or missing arguments" << '\n';
+    }
+
+  }
+
+  catch (std::out_of_range) {
+    std::cout << "Command not found" << '\n';
+  }
+
+  token.clear();
+}
+
+void terminal::get_input() {
+  std::cout << ">> ";
+  std::getline(std::cin, input);
+
+  string_parser();
+  input_parser();
+}
 void terminal::fEnd() {
   std::cout << "Terminating Program" << '\n';
   exit(0);
@@ -65,43 +122,21 @@ void terminal::fReset() {
   CPU.reset();
 }
 
-void terminal::string_parser() {
-  std::istringstream stream(input);
-  std::string temp;
+void terminal::fExec() { CPU.execute(); }
 
-  while (getline(stream, temp, delimiter)) {
-    token.push_back(temp);
-  }
+void terminal::fCounter() {
+  byte value1 = std::stoi(token.at(1), nullptr, 16);
+  byte value2 = std::stoi(token.at(2), nullptr, 16);
+  word memLoc = (value1 << 8) + value2;
+  CPU.set_PC(memLoc);
+  std::cout << "The program counter now is : " << std::hex << CPU.get_PC()
+            << std::dec << '\n';
 }
 
-void terminal::input_parser() {
+void terminal::fContext() { CPU.print_reg(); }
 
-  try {
-    if (token.size() == 0) {
-      return;
-    }
-
-    else if (commandRepo.at(token.at(0)).minLength <= token.size() &
-             (commandRepo.at(token.at(0)).maxLength >= token.size())) {
-      commandRepo.at(token.at(0)).function();
-    }
-
-    else {
-      std::cout << "Command incomplete or missing arguments" << '\n';
-    }
-
-  }
-
-  catch (std::out_of_range) {
-    std::cout << "Invalid Command" << '\n';
-  }
-}
-
-void terminal::get_input() {
-  std::cout << ">> ";
-  std::getline(std::cin, input);
-
+void terminal::perform(std::string input) {
+  this->input = input;
   string_parser();
   input_parser();
-  token.clear();
 }

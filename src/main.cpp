@@ -2,8 +2,8 @@
 
 int main() {
   terminal term;
-  while (1) {
-    term.get_input();
-  }
+
+  term.perform("context");
+
   return 0;
 }

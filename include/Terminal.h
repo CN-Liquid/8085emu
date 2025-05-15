@@ -1,8 +1,8 @@
 #include <8085.h>
 
 struct command {
-  int minLength;
-  int maxLength;
+  byte minLength;
+  byte maxLength;
   std::function<void(void)> function;
 };
 
@@ -23,17 +23,24 @@ class terminal {
   command cLoad;
   command cPrint;
   command cReset;
+  command cExec;
+  command cCounter;
+  command cContext;
 
   void fEnd();
   void fLoad();
   void fPrint();
   void fReset();
+  void fExec();
+  void fCounter();
+  void fContext();
 
   void string_parser();
 
   void input_parser();
 
 public:
+  void perform(std::string input);
   terminal();
   ~terminal();
 
