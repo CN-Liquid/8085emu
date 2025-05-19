@@ -56,27 +56,29 @@ void terminal::string_parser() {
   }
 }
 
-void terminal::input_parser() {
+void *terminal::input_parser() {
 
   try {
     if (token.size() == 0) {
-      return;
+      return nullptr;
     }
 
     else if (commandRepo.at(token.at(0)).minLength <= token.size() &&
              (commandRepo.at(token.at(0)).maxLength >= token.size())) {
 
-      commandRepo.at(token.at(0)).function();
+      return commandRepo.at(token.at(0)).function();
     }
 
     else {
       std::cout << "Syntax error or missing arguments" << '\n';
+      return nullptr
     }
 
   }
 
   catch (std::out_of_range) {
     std::cout << "Command not found" << '\n';
+    return nullptr;
   }
 
   token.clear();
@@ -89,12 +91,13 @@ void terminal::get_input() {
   string_parser();
   input_parser();
 }
-void terminal::fEnd() {
+void *terminal::fEnd() {
   std::cout << "Terminating Program" << '\n';
   exit(0);
+  return nullptr;
 }
 
-void terminal::fLoad() {
+void *terminal::fLoad() {
   std::cout << "Loading input to : " << token.at(1) << token.at(2) << "H"
             << '\n';
   byte value1 = std::stoi(token.at(1), nullptr, 16);
@@ -105,9 +108,10 @@ void terminal::fLoad() {
     CPU.load_DB(data);
     CPU.mem_write(memLoc + i - 3);
   }
+  return nullptr;
 }
 
-void terminal::fPrint() {
+void *terminal::fPrint() {
   std::cout << "Printing 8 bytes from : " << token.at(1) << token.at(2) << "H"
             << '\n';
   byte value1 = std::stoi(token.at(1), nullptr, 16);
@@ -115,28 +119,38 @@ void terminal::fPrint() {
   word memLoc = (value1 << 8) + value2;
   CPU.print(memLoc);
   std::cout << '\n';
+  return nullptr;
 }
 
-void terminal::fReset() {
+void *terminal::fReset() {
   std::cout << "Resetting memory and the CPU context" << '\n';
   CPU.reset();
+  return nullptr;
 }
 
-void terminal::fExec() { CPU.execute(); }
+void *terminal::fExec() {
+  CPU.execute();
+  return nullptr;
+}
 
-void terminal::fCounter() {
+void *terminal::fCounter() {
   byte value1 = std::stoi(token.at(1), nullptr, 16);
   byte value2 = std::stoi(token.at(2), nullptr, 16);
   word memLoc = (value1 << 8) + value2;
   CPU.set_PC(memLoc);
   std::cout << "The program counter now is : " << std::hex << CPU.get_PC()
             << std::dec << '\n';
+
+  return nullptr;
 }
 
-void terminal::fContext() { CPU.print_reg(); }
+void *terminal::fContext() {
+  CPU.print_reg();
+  return &CPU.cachedContext;
+}
 
-void terminal::perform(std::string input) {
+void *terminal::perform(std::string input) {
   this->input = input;
   string_parser();
-  input_parser();
+  return input_parser();
 }

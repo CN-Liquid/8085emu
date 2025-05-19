@@ -79,6 +79,7 @@ class emu8085 {
   void initializeInstructionTable();
 
 public:
+  context cachedContext;
   // Transfer commands only to be used to define 8085 instructions
   void load_reg_pair(byte &regPair, word data);
   void load_reg(byte &reg, byte data);
@@ -89,7 +90,7 @@ public:
   void execute();
   void print(word memLoc);
 
-  context get_context();
+  void refresh_context();
 
   emu8085();
 

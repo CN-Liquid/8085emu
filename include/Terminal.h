@@ -27,20 +27,20 @@ class terminal {
   command cCounter;
   command cContext;
 
-  void fEnd();
-  void fLoad();
-  void fPrint();
-  void fReset();
-  void fExec();
-  void fCounter();
-  void fContext();
+  void *fEnd();
+  void *fLoad();
+  void *fPrint();
+  void *fReset();
+  void *fExec();
+  void *fCounter();
+  void *fContext();
 
   void string_parser();
 
-  void input_parser();
+  void *input_parser();
 
 public:
-  void perform(std::string input);
+  void *perform(std::string input);
   terminal();
   ~terminal();
 
