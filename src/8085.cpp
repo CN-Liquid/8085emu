@@ -89,4 +89,25 @@ void emu8085::print(word memLoc) {
   }
 }
 
+context emu8085::get_context() {
+  context cpuContext;
+  cpuContext.A = A;
+  cpuContext.B = B;
+  cpuContext.C = C;
+  cpuContext.D = D;
+  cpuContext.E = E;
+  cpuContext.H = H;
+  cpuContext.L = L;
+  cpuContext.I = I;
+  cpuContext.SPU = SPU;
+  cpuContext.SPL = SPL;
+  cpuContext.PCU = PCU;
+  cpuContext.PCL = PCL;
+  cpuContext.DB = DB;
+  cpuContext.S = S;
+  cpuContext.Z = Z;
+  cpuContext.AC = AC;
+  cpuContext.P = P;
+  cpuContext.CY = CY;
+}
 emu8085::~emu8085() { delete[] mem; }
