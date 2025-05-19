@@ -71,17 +71,17 @@ void *terminal::input_parser() {
 
     else {
       std::cout << "Syntax error or missing arguments" << '\n';
-      return nullptr
+      return nullptr;
     }
 
   }
 
   catch (std::out_of_range) {
     std::cout << "Command not found" << '\n';
-    return nullptr;
   }
 
   token.clear();
+  return nullptr;
 }
 
 void terminal::get_input() {

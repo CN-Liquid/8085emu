@@ -3,7 +3,7 @@
 struct command {
   byte minLength;
   byte maxLength;
-  std::function<void(void)> function;
+  std::function<void *(void)> function;
 };
 
 class terminal {
