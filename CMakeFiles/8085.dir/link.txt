@@ -1,0 +1,1 @@
+/usr/bin/c++ -fPIC -Wl,--dependency-file=CMakeFiles/8085.dir/link.d -shared -Wl,-soname,lib8085.so -o lib8085.so CMakeFiles/8085.dir/src/8085.cpp.o CMakeFiles/8085.dir/src/Execute.cpp.o CMakeFiles/8085.dir/src/Instruction.cpp.o CMakeFiles/8085.dir/src/Transfer.cpp.o

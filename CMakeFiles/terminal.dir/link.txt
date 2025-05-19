@@ -1,0 +1,1 @@
+/usr/bin/c++ -fPIC -Wl,--dependency-file=CMakeFiles/terminal.dir/link.d -shared -Wl,-soname,libterminal.so -o libterminal.so CMakeFiles/terminal.dir/src/Terminal.cpp.o
