@@ -109,5 +109,6 @@ context emu8085::get_context() {
   cpuContext.AC = AC;
   cpuContext.P = P;
   cpuContext.CY = CY;
+  return cpuContext;
 }
 emu8085::~emu8085() { delete[] mem; }
