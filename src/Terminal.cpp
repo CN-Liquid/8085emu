@@ -146,6 +146,7 @@ void *terminal::fCounter() {
 
 void *terminal::fContext() {
   CPU.print_reg();
+  CPU.refresh_context();
   return &CPU.cachedContext;
 }
 
