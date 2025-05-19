@@ -1,4 +1,0 @@
-/home/liquid/Documents/8085emu/CMakeFiles/8085.dir
-/home/liquid/Documents/8085emu/CMakeFiles/terminal.dir
-/home/liquid/Documents/8085emu/CMakeFiles/edit_cache.dir
-/home/liquid/Documents/8085emu/CMakeFiles/rebuild_cache.dir

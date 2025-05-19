@@ -1,18 +1,25 @@
-cmake_minimum_required(VERSION 3.30)
-
+cmake_minimum_required(VERSION 3.10)
 project(8085emu)
 
-set(CMAKE_CXX_STANDARD 20)
-file(GLOB SOURCES
-    "main.cpp"
-    "src/*.cpp"
+# Set the output directory for libraries
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
+
+add_library(8085 SHARED
+    src/8085.cpp
+    src/Execute.cpp
+    src/Instruction.cpp
+    src/Transfer.cpp
 )
-add_executable(8085emu ${SOURCES})
 
-target_include_directories(8085emu PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include ${CMAKE_CURRENT_SOURCE_DIR}/src)
+add_library(terminal SHARED
+    src/Terminal.cpp
+)
 
+# Corrected:  Apply include directories to the '8085' and 'terminal' targets.
+target_include_directories(8085 PUBLIC include)
+target_include_directories(terminal PUBLIC include)
 
-
-
-
-
+# Create directories if they don't exist
+file(MAKE_DIRECTORY
+    ${CMAKE_CURRENT_BINARY_DIR}/lib
+)
