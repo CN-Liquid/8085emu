@@ -57,21 +57,19 @@ void terminal::string_parser() {
 }
 
 void *terminal::input_parser() {
-
+  void *returnPointer = nullptr;
   try {
     if (token.size() == 0) {
-      return nullptr;
     }
 
     else if (commandRepo.at(token.at(0)).minLength <= token.size() &&
              (commandRepo.at(token.at(0)).maxLength >= token.size())) {
 
-      return commandRepo.at(token.at(0)).function();
+      returnPointer = commandRepo.at(token.at(0)).function();
     }
 
     else {
       std::cout << "Syntax error or missing arguments" << '\n';
-      return nullptr;
     }
 
   }
@@ -81,7 +79,7 @@ void *terminal::input_parser() {
   }
 
   token.clear();
-  return nullptr;
+  return returnPointer;
 }
 
 void terminal::get_input() {
@@ -119,7 +117,9 @@ void *terminal::fPrint() {
   word memLoc = (value1 << 8) + value2;
   CPU.print(memLoc);
   std::cout << '\n';
-  return nullptr;
+  CPU.mem_read(memLoc);
+  CPU.refresh_context();
+  return &CPU.cachedContext;
 }
 
 void *terminal::fReset() {
