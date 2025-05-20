@@ -32,6 +32,10 @@ terminal::terminal() {
   cContext.maxLength = 1;
   cContext.function = std::bind(&terminal::fContext, this);
 
+  cMessage.minLength = 1;
+  cMessage.maxLength = 1;
+  cMessage.function = std::bind(&terminal::fMessage, this);
+
   init();
 }
 
@@ -45,6 +49,7 @@ void terminal::init() {
   commandRepo["context"] = cContext;
   commandRepo["counter"] = cCounter;
   commandRepo["exec"] = cExec;
+  commandRepo["message"] = cMessage;
 }
 
 void terminal::string_parser() {
@@ -69,13 +74,17 @@ void *terminal::input_parser() {
     }
 
     else {
-      std::cout << "Syntax error or missing arguments" << '\n';
+      if (enableMessages) {
+        std::cout << "Syntax error or missing arguments" << '\n';
+      }
     }
 
   }
 
   catch (std::out_of_range) {
-    std::cout << "Command not found" << '\n';
+    if (enableMessages) {
+      std::cout << "Command not found" << '\n';
+    }
   }
 
   token.clear();
@@ -90,14 +99,18 @@ void terminal::get_input() {
   input_parser();
 }
 void *terminal::fEnd() {
-  std::cout << "Terminating Program" << '\n';
+  if (enableMessages) {
+    std::cout << "Terminating Program" << '\n';
+  }
   exit(0);
   return nullptr;
 }
 
 void *terminal::fLoad() {
-  std::cout << "Loading input to : " << token.at(1) << token.at(2) << "H"
-            << '\n';
+  if (enableMessages) {
+    std::cout << "Loading input to : " << token.at(1) << token.at(2) << "H"
+              << '\n';
+  }
   byte value1 = std::stoi(token.at(1), nullptr, 16);
   byte value2 = std::stoi(token.at(2), nullptr, 16);
   word memLoc = (value1 << 8) + value2;
@@ -110,20 +123,27 @@ void *terminal::fLoad() {
 }
 
 void *terminal::fPrint() {
-  std::cout << "Printing 8 bytes from : " << token.at(1) << token.at(2) << "H"
-            << '\n';
+  if (enableMessages) {
+    std::cout << "Printing 8 bytes from : " << token.at(1) << token.at(2) << "H"
+              << '\n';
+  }
   byte value1 = std::stoi(token.at(1), nullptr, 16);
   byte value2 = std::stoi(token.at(2), nullptr, 16);
   word memLoc = (value1 << 8) + value2;
-  CPU.print(memLoc);
-  std::cout << '\n';
+  if (enableMessages) {
+    CPU.print(memLoc);
+
+    std::cout << '\n';
+  }
   CPU.mem_read(memLoc);
   CPU.refresh_context();
   return &CPU.cachedContext;
 }
 
 void *terminal::fReset() {
-  std::cout << "Resetting memory and the CPU context" << '\n';
+  if (enableMessages) {
+    std::cout << "Resetting memory and the CPU context" << '\n';
+  }
   CPU.reset();
   return nullptr;
 }
@@ -138,16 +158,33 @@ void *terminal::fCounter() {
   byte value2 = std::stoi(token.at(2), nullptr, 16);
   word memLoc = (value1 << 8) + value2;
   CPU.set_PC(memLoc);
-  std::cout << "The program counter now is : " << std::hex << CPU.get_PC()
-            << std::dec << '\n';
+  if (enableMessages) {
+    std::cout << "The program counter now is : " << std::hex << CPU.get_PC()
+              << std::dec << '\n';
+  }
 
   return nullptr;
 }
 
 void *terminal::fContext() {
-  CPU.print_reg();
+  if (enableMessages) {
+    CPU.print_reg();
+  }
   CPU.refresh_context();
   return &CPU.cachedContext;
+}
+
+void *terminal::fMessage() {
+  if (enableMessages) {
+    std::cout << "Disabled Messages" << '\n';
+    enableMessages = !enableMessages;
+  }
+
+  else {
+    std::cout << "Enabled Messages" << '\n';
+    enableMessages = !enableMessages;
+  }
+  return nullptr;
 }
 
 void *terminal::perform(std::string input) {
