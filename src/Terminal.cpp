@@ -36,6 +36,14 @@ terminal::terminal() {
   cMessage.maxLength = 1;
   cMessage.function = std::bind(&terminal::fMessage, this);
 
+  cLoadReg.minLength = 3;
+  cLoadReg.maxLength = 3;
+  cLoadReg.function = std::bind(&terminal::fLoadReg, this);
+
+  cLoadRegPair.minLength = 4;
+  cLoadRegPair.maxLength = 4;
+  cLoadRegPair.function = std::bind(&terminal::fLoadRegPair, this);
+
   init();
 }
 
@@ -46,10 +54,20 @@ void terminal::init() {
   commandRepo["load"] = cLoad;
   commandRepo["print"] = cPrint;
   commandRepo["reset"] = cReset;
-  commandRepo["context"] = cContext;
-  commandRepo["counter"] = cCounter;
+  commandRepo["cont"] = cContext;
+  commandRepo["count"] = cCounter;
   commandRepo["exec"] = cExec;
-  commandRepo["message"] = cMessage;
+  commandRepo["mes"] = cMessage;
+  commandRepo["loadr"] = cLoadReg;
+  commandRepo["loadrp"] = cLoadRegPair;
+
+  regList["A"] = &CPU.A;
+  regList["B"] = &CPU.B;
+  regList["C"] = &CPU.C;
+  regList["D"] = &CPU.D;
+  regList["E"] = &CPU.E;
+  regList["H"] = &CPU.H;
+  regList["L"] = &CPU.L;
 }
 
 void terminal::string_parser() {
@@ -136,8 +154,7 @@ void *terminal::fPrint() {
     std::cout << '\n';
   }
   CPU.mem_read(memLoc);
-  CPU.refresh_context();
-  return &CPU.cachedContext;
+  return &CPU.DB;
 }
 
 void *terminal::fReset() {
@@ -170,8 +187,7 @@ void *terminal::fContext() {
   if (enableMessages) {
     CPU.print_reg();
   }
-  CPU.refresh_context();
-  return &CPU.cachedContext;
+  return nullptr;
 }
 
 void *terminal::fMessage() {
@@ -185,6 +201,20 @@ void *terminal::fMessage() {
     enableMessages = !enableMessages;
   }
   return nullptr;
+}
+
+void *terminal::fLoadReg() {
+  byte data = std::stoi(token.at(2), nullptr, 16);
+  CPU.load_reg(*regList.at(token.at(1)), data);
+  return regList.at(token.at(1));
+}
+
+void *terminal::fLoadRegPair() {
+  byte value1 = std::stoi(token.at(2), nullptr, 16);
+  byte value2 = std::stoi(token.at(3), nullptr, 16);
+  word data = (value1 << 8) + value2;
+  CPU.load_reg_pair(*regList.at(token.at(1)), data);
+  return regList.at(token.at(1));
 }
 
 void *terminal::perform(std::string input) {

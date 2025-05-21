@@ -3,9 +3,9 @@
 int main() {
   terminal term;
 
-  context *cpuContext = (context *)(term.perform("context"));
-
-  std::cout << static_cast<int>(cpuContext->SPU);
+  while (1) {
+    term.get_input();
+  }
 
   return 0;
 }
