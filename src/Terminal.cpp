@@ -44,6 +44,10 @@ terminal::terminal() {
   cLoadRegPair.maxLength = 4;
   cLoadRegPair.function = std::bind(&terminal::fLoadRegPair, this);
 
+  cPrintReg.minLength = 2;
+  cPrintReg.maxLength = 2;
+  cPrintReg.function = std::bind(&terminal::fPrintReg, this);
+
   init();
 }
 
@@ -60,6 +64,7 @@ void terminal::init() {
   commandRepo["mes"] = cMessage;
   commandRepo["loadr"] = cLoadReg;
   commandRepo["loadrp"] = cLoadRegPair;
+  commandRepo["printr"] = cPrintReg;
 
   regList["A"] = &CPU.A;
   regList["B"] = &CPU.B;
@@ -68,6 +73,8 @@ void terminal::init() {
   regList["E"] = &CPU.E;
   regList["H"] = &CPU.H;
   regList["L"] = &CPU.L;
+  regList["SP"] = &CPU.SPU;
+  regList["PC"] = &CPU.PCU;
 }
 
 void terminal::string_parser() {
@@ -214,6 +221,14 @@ void *terminal::fLoadRegPair() {
   byte value2 = std::stoi(token.at(3), nullptr, 16);
   word data = (value1 << 8) + value2;
   CPU.load_reg_pair(*regList.at(token.at(1)), data);
+  return regList.at(token.at(1));
+}
+
+void *terminal::fPrintReg() {
+
+  if (enableMessages) {
+    std::cout << std::hex << static_cast<int>(*regList.at(token.at(1))) << '\n';
+  }
   return regList.at(token.at(1));
 }
 

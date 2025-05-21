@@ -34,6 +34,7 @@ class terminal {
   command cMessage;
   command cLoadReg;
   command cLoadRegPair;
+  command cPrintReg;
 
   void *fEnd();
   void *fLoad();
@@ -45,6 +46,7 @@ class terminal {
   void *fMessage();
   void *fLoadReg();
   void *fLoadRegPair();
+  void *fPrintReg();
 
   void string_parser();
 
