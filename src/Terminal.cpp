@@ -48,6 +48,18 @@ terminal::terminal() {
   cPrintReg.maxLength = 2;
   cPrintReg.function = std::bind(&terminal::fPrintReg, this);
 
+  cPrintRegPair.minLength = 2;
+  cPrintRegPair.maxLength = 2;
+  cPrintRegPair.function = std::bind(&terminal::fPrintRegPair, this);
+
+  cResetReg.minLength = 1;
+  cResetReg.maxLength = 1;
+  cResetReg.function = std::bind(&terminal::fResetReg, this);
+
+  cResetMem.minLength = 1;
+  cResetMem.maxLength = 1;
+  cResetMem.function = std::bind(&terminal::fResetMem, this);
+
   init();
 }
 
@@ -65,6 +77,9 @@ void terminal::init() {
   commandRepo["loadr"] = cLoadReg;
   commandRepo["loadrp"] = cLoadRegPair;
   commandRepo["printr"] = cPrintReg;
+  commandRepo["printrp"] = cPrintRegPair;
+  commandRepo["resetreg"] = cResetReg;
+  commandRepo["resetmem"] = cResetMem;
 
   regList["A"] = &CPU.A;
   regList["B"] = &CPU.B;
@@ -230,6 +245,31 @@ void *terminal::fPrintReg() {
     std::cout << std::hex << static_cast<int>(*regList.at(token.at(1))) << '\n';
   }
   return regList.at(token.at(1));
+}
+
+void *terminal::fPrintRegPair() {
+  if (enableMessages) {
+    std::cout << std::hex << static_cast<int>(*regList.at(token.at(1))) << " "
+              << static_cast<int>(*(regList.at(token.at(1)) + sizeof(byte)))
+              << '\n';
+  }
+  return regList.at(token.at(1));
+}
+
+void *terminal::fResetReg() {
+  CPU.reset_reg();
+  if (enableMessages) {
+    std::cout << "All register were reset" << '\n';
+  }
+  return nullptr;
+}
+
+void *terminal::fResetMem() {
+  CPU.reset_mem();
+  if (enableMessages) {
+    std::cout << "All memory was reset" << '\n';
+  }
+  return nullptr;
 }
 
 void *terminal::perform(std::string input) {
