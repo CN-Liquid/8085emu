@@ -90,6 +90,7 @@ void terminal::init() {
   regList["L"] = &CPU.L;
   regList["SP"] = &CPU.SPU;
   regList["PC"] = &CPU.PCU;
+  regList["I"] = &CPU.I;
 }
 
 void terminal::string_parser() {
