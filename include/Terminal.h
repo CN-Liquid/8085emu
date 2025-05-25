@@ -38,6 +38,7 @@ class terminal {
   command cPrintRegPair;
   command cResetReg;
   command cResetMem;
+  command cPrintF;
 
   void *fEnd();
   void *fLoad();
@@ -53,6 +54,7 @@ class terminal {
   void *fPrintRegPair();
   void *fResetReg();
   void *fResetMem();
+  void *fPrintF();
 
   void string_parser();
 

@@ -60,6 +60,10 @@ terminal::terminal() {
   cResetMem.maxLength = 1;
   cResetMem.function = std::bind(&terminal::fResetMem, this);
 
+  cPrintF.minLength = 2;
+  cPrintF.maxLength = 2;
+  cPrintF.function = std::bind(&terminal::fPrintF, this);
+
   init();
 }
 
@@ -80,6 +84,7 @@ void terminal::init() {
   commandRepo["printrp"] = cPrintRegPair;
   commandRepo["resetreg"] = cResetReg;
   commandRepo["resetmem"] = cResetMem;
+  commandRepo["printf"] = cPrintF;
 
   regList["A"] = &CPU.A;
   regList["B"] = &CPU.B;
@@ -269,6 +274,13 @@ void *terminal::fResetMem() {
   CPU.reset_mem();
   if (enableMessages) {
     std::cout << "All memory was reset" << '\n';
+  }
+  return nullptr;
+}
+
+void *terminal::fPrintF() {
+
+  if (enableMessages) {
   }
   return nullptr;
 }
