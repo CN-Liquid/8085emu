@@ -60,8 +60,8 @@ terminal::terminal() {
   cResetMem.maxLength = 1;
   cResetMem.function = std::bind(&terminal::fResetMem, this);
 
-  cPrintF.minLength = 2;
-  cPrintF.maxLength = 2;
+  cPrintF.minLength = 1;
+  cPrintF.maxLength = 1;
   cPrintF.function = std::bind(&terminal::fPrintF, this);
 
   init();
@@ -280,9 +280,17 @@ void *terminal::fResetMem() {
 
 void *terminal::fPrintF() {
 
+  flags = (CPU.S << 8) + (CPU.Z << 7) + (CPU.P << 6) + (CPU.AC << 5) +
+          (CPU.CY << 4);
+
   if (enableMessages) {
+    std::cout << "S : " << static_cast<int>(CPU.S)
+              << " Z : " << static_cast<int>(CPU.Z)
+              << " P : " << static_cast<int>(CPU.P)
+              << " AC : " << static_cast<int>(CPU.AC)
+              << " CY : " << static_cast<int>(CPU.CY) << '\n';
   }
-  return nullptr;
+  return &flags;
 }
 
 void *terminal::perform(std::string input) {

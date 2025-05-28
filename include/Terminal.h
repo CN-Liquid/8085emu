@@ -22,6 +22,8 @@ class terminal {
 
   void init();
 
+  byte flags;
+
   std::unordered_map<std::string, byte *> regList;
 
   command cEnd;
