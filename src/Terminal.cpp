@@ -280,8 +280,8 @@ void *terminal::fResetMem() {
 
 void *terminal::fPrintF() {
 
-  flags = (CPU.S << 8) + (CPU.Z << 7) + (CPU.P << 6) + (CPU.AC << 5) +
-          (CPU.CY << 4);
+  flags = (CPU.S << 7) + (CPU.Z << 6) + (CPU.P << 5) + (CPU.AC << 4) +
+          (CPU.CY << 3);
 
   if (enableMessages) {
     std::cout << "S : " << static_cast<int>(CPU.S)
