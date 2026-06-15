@@ -302,7 +302,7 @@ void emu8085::CMP_R(byte &reg) {
   AC = ((A & 0x0F) < (reg & 0x0F));
 }
 void emu8085::CMP_M() {
-  word memLoc = populate_arguments_word();
+  word memLoc = ((word)H << 8) | (word)L;
   mem_read(memLoc);
   byte temp = A - DB;
 
@@ -310,8 +310,8 @@ void emu8085::CMP_M() {
   Z = (temp == 0);
   S = (temp >> 7);
   P = hasEvenOnes(temp);
-  CY = (A < mem[memLoc]);
-  AC = ((A & 0x0F) < (mem[memLoc] & 0x0F));
+  CY = (A < DB);
+  AC = ((A & 0x0F) < (DB & 0x0F));
 }
 void emu8085::CPI_D() {
   byte data = populate_arguments_byte();

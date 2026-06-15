@@ -26,7 +26,7 @@ void emu8085::initializeInstructionTable() {
 
   instructions[0x35] = std::bind(&emu8085::DCR_M, this);
 
-  instructions[0xBD] = std::bind(&emu8085::CMP_M, this);
+    instructions[0xBE] = std::bind(&emu8085::CMP_M, this);
   instructions[0xFE] = std::bind(&emu8085::CPI_D, this);
   instructions[0xA6] = std::bind(&emu8085::ANA_M, this);
   instructions[0xE6] = std::bind(&emu8085::ANI_D, this);
@@ -58,8 +58,8 @@ void emu8085::initializeInstructionTable() {
   instructions[0xD4] = std::bind(&emu8085::CNC_M, this);
   instructions[0xF4] = std::bind(&emu8085::CP_M, this);
   instructions[0xFC] = std::bind(&emu8085::CM_M, this);
-  instructions[0xDA] = std::bind(&emu8085::CZ_M, this);
-  instructions[0xCC] = std::bind(&emu8085::CNZ_M, this);
+    instructions[0xCC] = std::bind(&emu8085::CZ_M, this);
+    instructions[0xC4] = std::bind(&emu8085::CNZ_M, this);
   instructions[0xEC] = std::bind(&emu8085::CPE_M, this);
   instructions[0xE4] = std::bind(&emu8085::CPO_M, this);
 
@@ -86,13 +86,13 @@ void emu8085::initializeInstructionTable() {
   instructions[0x66] = std::bind(&emu8085::MOV_R_M, this, std::ref(this->H));
   instructions[0x6E] = std::bind(&emu8085::MOV_R_M, this, std::ref(this->L));
 
-  instructions[0x77] = std::bind(&emu8085::MOV_R_M, this, std::ref(this->A));
-  instructions[0x70] = std::bind(&emu8085::MOV_R_M, this, std::ref(this->B));
-  instructions[0x71] = std::bind(&emu8085::MOV_R_M, this, std::ref(this->C));
-  instructions[0x72] = std::bind(&emu8085::MOV_R_M, this, std::ref(this->D));
-  instructions[0x73] = std::bind(&emu8085::MOV_R_M, this, std::ref(this->E));
-  instructions[0x74] = std::bind(&emu8085::MOV_R_M, this, std::ref(this->H));
-  instructions[0x75] = std::bind(&emu8085::MOV_R_M, this, std::ref(this->L));
+    instructions[0x77] = std::bind(&emu8085::MOV_M_R, this, std::ref(this->A));
+    instructions[0x70] = std::bind(&emu8085::MOV_M_R, this, std::ref(this->B));
+    instructions[0x71] = std::bind(&emu8085::MOV_M_R, this, std::ref(this->C));
+    instructions[0x72] = std::bind(&emu8085::MOV_M_R, this, std::ref(this->D));
+    instructions[0x73] = std::bind(&emu8085::MOV_M_R, this, std::ref(this->E));
+    instructions[0x74] = std::bind(&emu8085::MOV_M_R, this, std::ref(this->H));
+    instructions[0x75] = std::bind(&emu8085::MOV_M_R, this, std::ref(this->L));
 
   instructions[0x3E] = std::bind(&emu8085::MVI_R_D, this, std::ref(this->A));
   instructions[0x06] = std::bind(&emu8085::MVI_R_D, this, std::ref(this->B));
@@ -104,7 +104,7 @@ void emu8085::initializeInstructionTable() {
 
   instructions[0x01] = std::bind(&emu8085::LXI_RP_D, this, std::ref(this->B));
   instructions[0x11] = std::bind(&emu8085::LXI_RP_D, this, std::ref(this->D));
-  instructions[0x21] = std::bind(&emu8085::LXI_RP_D, this, std::ref(this->E));
+    instructions[0x21] = std::bind(&emu8085::LXI_RP_D, this, std::ref(this->H));
   instructions[0x31] = std::bind(&emu8085::LXI_RP_D, this, std::ref(this->SPU));
 
   instructions[0x0A] = std::bind(&emu8085::LDAX_RP, this, std::ref(this->B));
@@ -325,7 +325,7 @@ std::function<void()> emu8085::function_recognizer(byte opcode) {
   if (instructions.find(opcode) != instructions.end()) {
     return instructions.at(opcode);
   } else {
-    std::cout << "Invalid opcode" << std::endl;
+    std::cout << "Invalid opcode : " << std::hex<< static_cast<int>(opcode) <<std::endl;
     exit(1);
   }
 }
